@@ -1,0 +1,4 @@
+pyautogui
+aircv
+numpy
+opencv-python
