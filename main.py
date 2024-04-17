@@ -21,8 +21,8 @@ if __name__ == "__main__":
     
     pyautogui.PAUSE = 0.005
     
-    path = os.path.dirname(os.path.realpath(sys.executable))
-    # path = os.path.dirname(os.path.realpath(__file__))
+    # path = os.path.dirname(os.path.realpath(sys.executable))
+    path = os.path.dirname(os.path.realpath(__file__))
 
     # load config file
     file = path+'/config.ini'
