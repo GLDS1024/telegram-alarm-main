@@ -21,8 +21,8 @@ if __name__ == "__main__":
     
     pyautogui.PAUSE = 0.005
     
-    # path = os.path.dirname(os.path.realpath(sys.executable))
-    path = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.dirname(os.path.realpath(sys.executable))
+    # path = os.path.dirname(os.path.realpath(__file__))
 
     # load config file
     file = path+'/config.ini'
@@ -65,6 +65,14 @@ if __name__ == "__main__":
     cropped = im.crop((rect[0][0],rect[0][1],rect[3][0],rect[3][1]))
     cropped.save(path+'/a.png')
     while(True):
+        con.read(file, encoding='utf-8')
+        sections = con.sections()
+        items = con.items('app') 
+        items = dict(items)
+        start = int(items['start'])
+        end = int(items['end'])
+        # print('\033[95m' + 'start:'+str(start)+' end:'+str(end)+ '\033[0m')
+        
         img = pyautogui.screenshot()
         img.save(path+'/screenshot.png',quality=80)
 
@@ -82,25 +90,24 @@ if __name__ == "__main__":
             time.sleep(int(items['alarmsleep']))
         
         if(diff>end):
-            try:
-                imsrc = ac.imread(path+'/screenshot.png')
-                imobj = ac.imread(path+'/target1.png') 
-                pos = ac.find_template(imsrc, imobj, 0.8)
+            imsrc = ac.imread(path+'/screenshot.png')
+            imobj = ac.imread(path+'/target1.png') 
+            pos = ac.find_template(imsrc, imobj, 0.8)
+            if(pos!=None):
+                print('Target1 image match',pos['rectangle'])
+                rect = pos['rectangle']
+                cropped = img.crop((rect[0][0],rect[0][1],rect[3][0],rect[3][1]))
+                cropped.save(path+'/a.png')
+            else:
+                imobj1 = ac.imread(path+'/target2.png')
+                pos = ac.find_template(imsrc, imobj1, 0.8)
                 if(pos!=None):
-                    print('Target1 image match',pos['rectangle'])
+                    print('Target2 image match',pos['rectangle'])
                     rect = pos['rectangle']
                     cropped = img.crop((rect[0][0],rect[0][1],rect[3][0],rect[3][1]))
                     cropped.save(path+'/a.png')
                 else:
-                    imobj1 = ac.imread(path+'/target2.png')
-                    pos = ac.find_template(imsrc, imobj1, 0.8)
-                    if(pos!=None):
-                        print('Target2 image match',pos['rectangle'])
-                        rect = pos['rectangle']
-                        cropped = img.crop((rect[0][0],rect[0][1],rect[3][0],rect[3][1]))
-                        cropped.save(path+'/a.png')
-            finally:
-                continue
+                    print('none image match')
             
                 
         time.sleep(int(items['loopsleep']))
