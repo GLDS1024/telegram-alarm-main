@@ -1,0 +1,6 @@
+pyautogui
+pyscreeze
+pillow
+aircv
+numpy
+opencv-python
