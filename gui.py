@@ -10,9 +10,9 @@ import monitor
 
 
 def get_project_path():
-    if getattr(sys, 'frozen', False):
+    if hasattr(sys, '_MEIPASS'):
         # 打包后
-        return os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(sys.executable))))
+        return sys._MEIPASS
     else:
         # 开发环境
         return os.path.dirname(os.path.abspath(__file__))
@@ -60,7 +60,6 @@ def run_gui():
         try:
             with open(file, 'w', encoding='utf-8') as f:
                 con.write(f)
-            messagebox.showinfo('성공', '설정 저장됨')
             root.destroy()
         except Exception as e:
             messagebox.showerror('저장 실패', str(e))
@@ -71,7 +70,6 @@ def run_gui():
         try:
             with open(file, 'w', encoding='utf-8') as f:
                 con.write(f)
-            messagebox.showinfo('성공', '설정 저장됨')
         except Exception as e:
             messagebox.showerror('저장 실패', str(e))
 
@@ -142,7 +140,7 @@ def run_gui():
         if not monitor_thread:
             return
         stop_event.set()
-        monitor_thread.join(timeout=5)
+        monitor_thread.join(timeout=1)
         monitor_thread = None
         stop_event = None
         _enable_entries()
